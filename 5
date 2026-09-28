@@ -1,0 +1,184 @@
+#include <stdio.h>
+#define MAX 5
+
+int q[MAX], front = -1, rear = -1;
+int cq[MAX], cf = -1, cr = -1;
+int dq[MAX], df = -1, dr = -1;
+
+void simpleQueue() {
+    int ch, x, i;
+
+    while (1) {
+        printf("\n1.Enqueue\n2.Dequeue\n3.Display\n4.Back\n");
+        scanf("%d", &ch);
+
+        if (ch == 1) {
+            if (rear == MAX - 1)
+                printf("Queue Overflow\n");
+            else {
+                printf("Enter element: ");
+                scanf("%d", &x);
+                if (front == -1) front = 0;
+                q[++rear] = x;
+            }
+        }
+        else if (ch == 2) {
+            if (front == -1 || front > rear)
+                printf("Queue Underflow\n");
+            else {
+                printf("Deleted: %d\n", q[front++]);
+                if (front > rear)
+                    front = rear = -1;
+            }
+        }
+        else if (ch == 3) {
+            if (front == -1)
+                printf("Queue Empty\n");
+            else {
+                for (i = front; i <= rear; i++)
+                    printf("%d ", q[i]);
+                printf("\n");
+            }
+        }
+        else if (ch == 4)
+            break;
+    }
+}
+
+void circularQueue() {
+    int ch, x, i;
+
+    while (1) {
+        printf("\n1.Enqueue\n2.Dequeue\n3.Display\n4.Back\n");
+        scanf("%d", &ch);
+
+        if (ch == 1) {
+            if ((cr + 1) % MAX == cf)
+                printf("Queue Overflow\n");
+            else {
+                printf("Enter element: ");
+                scanf("%d", &x);
+                if (cf == -1)
+                    cf = 0;
+                cr = (cr + 1) % MAX;
+                cq[cr] = x;
+            }
+        }
+        else if (ch == 2) {
+            if (cf == -1)
+                printf("Queue Underflow\n");
+            else {
+                printf("Deleted: %d\n", cq[cf]);
+                if (cf == cr)
+                    cf = cr = -1;
+                else
+                    cf = (cf + 1) % MAX;
+            }
+        }
+        else if (ch == 3) {
+            if (cf == -1)
+                printf("Queue Empty\n");
+            else {
+                i = cf;
+                while (1) {
+                    printf("%d ", cq[i]);
+                    if (i == cr)
+                        break;
+                    i = (i + 1) % MAX;
+                }
+                printf("\n");
+            }
+        }
+        else if (ch == 4)
+            break;
+    }
+}
+
+void deque() {
+    int ch, x, i;
+
+    while (1) {
+        printf("\n1.Insert Front\n2.Insert Rear\n3.Delete Front\n4.Delete Rear\n5.Display\n6.Back\n");
+        scanf("%d", &ch);
+
+        if (ch == 1) {
+            if (df == 0)
+                printf("Deque Overflow\n");
+            else {
+                printf("Enter element: ");
+                scanf("%d", &x);
+                if (df == -1)
+                    df = dr = 0;
+                else
+                    df--;
+                dq[df] = x;
+            }
+        }
+        else if (ch == 2) {
+            if (dr == MAX - 1)
+                printf("Deque Overflow\n");
+            else {
+                printf("Enter element: ");
+                scanf("%d", &x);
+                if (df == -1)
+                    df = dr = 0;
+                else
+                    dr++;
+                dq[dr] = x;
+            }
+        }
+        else if (ch == 3) {
+            if (df == -1)
+                printf("Deque Underflow\n");
+            else {
+                printf("Deleted: %d\n", dq[df]);
+                if (df == dr)
+                    df = dr = -1;
+                else
+                    df++;
+            }
+        }
+        else if (ch == 4) {
+            if (df == -1)
+                printf("Deque Underflow\n");
+            else {
+                printf("Deleted: %d\n", dq[dr]);
+                if (df == dr)
+                    df = dr = -1;
+                else
+                    dr--;
+            }
+        }
+        else if (ch == 5) {
+            if (df == -1)
+                printf("Deque Empty\n");
+            else {
+                for (i = df; i <= dr; i++)
+                    printf("%d ", dq[i]);
+                printf("\n");
+            }
+        }
+        else if (ch == 6)
+            break;
+    }
+}
+
+int main() {
+    int ch;
+
+    while (1) {
+        printf("\n1.Simple Queue\n2.Circular Queue\n3.Double Ended Queue\n4.Exit\n");
+        scanf("%d", &ch);
+
+        if (ch == 1)
+            simpleQueue();
+        else if (ch == 2)
+            circularQueue();
+        else if (ch == 3)
+            deque();
+        else if (ch == 4)
+            break;
+    }
+
+    return 0;
+}
