@@ -1,0 +1,477 @@
+// ============================================================
+// 1. 2:1 MULTIPLEXER
+// File: mux2to1.v
+// ============================================================
+
+module mux2to1(
+    input a,
+    input b,
+    input sel,
+    output y
+);
+
+assign y = (a & ~sel) | (b & sel);
+
+endmodule
+
+
+// ============================================================
+// 2. 2:1 MULTIPLEXER USING CONDITIONAL OPERATOR
+// File: mux2to1_cond.v
+// ============================================================
+
+module mux2to1_cond(
+    input a,
+    input b,
+    input sel,
+    output y
+);
+
+assign y = sel ? b : a;
+
+endmodule
+
+
+// ============================================================
+// 3. 1:2 DEMULTIPLEXER
+// File: demux1to2.v
+// ============================================================
+
+module demux1to2(
+    input d,
+    input sel,
+    output y0,
+    output y1
+);
+
+assign y0 = d & ~sel;
+assign y1 = d & sel;
+
+endmodule
+
+
+// ============================================================
+// 4. 1:2 DEMULTIPLEXER USING CONDITIONAL OPERATOR
+// File: demux1to2_cond.v
+// ============================================================
+
+module demux1to2_cond(
+    input d,
+    input sel,
+    output y0,
+    output y1
+);
+
+assign y0 = sel ? 1'b0 : d;
+assign y1 = sel ? d : 1'b0;
+
+endmodule
+
+
+// ============================================================
+// 5. 4:2 ENCODER
+// File: encoder4to2.v
+// ============================================================
+
+module encoder4to2(
+    input d0,
+    input d1,
+    input d2,
+    input d3,
+    output y1,
+    output y0
+);
+
+assign y1 = d2 | d3;
+assign y0 = d1 | d3;
+
+endmodule
+
+
+// ============================================================
+// 6. 4:2 ENCODER USING CONDITIONAL OPERATOR
+// File: encoder4to2_cond.v
+// ============================================================
+
+module encoder4to2_cond(
+    input d0,
+    input d1,
+    input d2,
+    input d3,
+    output [1:0] y
+);
+
+assign y = d3 ? 2'b11 :
+           d2 ? 2'b10 :
+           d1 ? 2'b01 :
+                2'b00;
+
+endmodule
+
+
+// ============================================================
+// 7. 2:4 DECODER
+// File: decoder2to4.v
+// ============================================================
+
+module decoder2to4(
+    input a,
+    input b,
+    output y0,
+    output y1,
+    output y2,
+    output y3
+);
+
+assign y0 = ~a & ~b;
+assign y1 = ~a & b;
+assign y2 = a & ~b;
+assign y3 = a & b;
+
+endmodule
+
+
+// ============================================================
+// 8. 2:4 DECODER USING CONDITIONAL OPERATOR
+// File: decoder2to4_cond.v
+// ============================================================
+
+module decoder2to4_cond(
+    input [1:0] in,
+    output [3:0] y
+);
+
+assign y = in == 2'b00 ? 4'b0001 :
+           in == 2'b01 ? 4'b0010 :
+           in == 2'b10 ? 4'b0100 :
+                         4'b1000;
+
+endmodule
+
+
+// ============================================================
+// 9. 7 SEGMENT DECODER
+// Common Cathode
+// Inputs: 4-bit binary number
+// Outputs: abcdefg
+// File: seven_segment.v
+// ============================================================
+
+module seven_segment(
+    input [3:0] in,
+    output [6:0] seg
+);
+
+assign seg[6] = (~in[3] & ~in[2] & ~in[1] & in[0]) |
+                (~in[3] & in[2] & ~in[1] & ~in[0]) |
+                (in[3] & ~in[2] & in[1] & in[0]) |
+                (in[3] & in[2] & ~in[1] & in[0]);
+
+assign seg[5] = (~in[3] & in[2] & ~in[1] & in[0]) |
+                (~in[3] & in[2] & in[1] & ~in[0]) |
+                (in[3] & ~in[2] & in[1] & in[0]) |
+                (in[3] & in[2] & ~in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & in[0]);
+
+assign seg[5] = seg[5];
+
+assign seg[4] = (~in[3] & ~in[2] & in[1] & ~in[0]) |
+                (~in[3] & in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & ~in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & in[0]);
+
+assign seg[3] = (~in[3] & ~in[2] & ~in[1] & in[0]) |
+                (~in[3] & in[2] & ~in[1] & ~in[0]) |
+                (~in[3] & in[2] & in[1] & in[0]) |
+                (in[3] & ~in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & in[0]);
+
+assign seg[2] = (~in[3] & ~in[2] & ~in[1] & in[0]) |
+                (~in[3] & ~in[2] & in[1] & ~in[0]) |
+                (~in[3] & in[2] & in[1] & in[0]) |
+                (in[3] & ~in[2] & ~in[1] & in[0]) |
+                (in[3] & ~in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & in[0]);
+
+assign seg[1] = (~in[3] & ~in[2] & ~in[1] & in[0]) |
+                (~in[3] & in[2] & ~in[1] & ~in[0]) |
+                (~in[3] & in[2] & in[1] & in[0]) |
+                (in[3] & ~in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & ~in[0]) |
+                (in[3] & in[2] & in[1] & in[0]);
+
+assign seg[0] = (~in[3] & ~in[2] & ~in[1] & ~in[0]) |
+                (~in[3] & ~in[2] & ~in[1] & in[0]) |
+                (~in[3] & in[2] & ~in[1] & ~in[0]) |
+                (~in[3] & in[2] & ~in[1] & in[0]) |
+                (~in[3] & in[2] & in[1] & in[0]) |
+                (in[3] & in[2] & ~in[1] & ~in[0]);
+
+endmodule
+
+
+// ============================================================
+// 10. 7 SEGMENT DECODER USING CONDITIONAL OPERATOR
+// File: seven_segment_cond.v
+// ============================================================
+
+module seven_segment_cond(
+    input [3:0] in,
+    output [6:0] seg
+);
+
+assign seg = in == 4'd0 ? 7'b1111110 :
+             in == 4'd1 ? 7'b0110000 :
+             in == 4'd2 ? 7'b1101101 :
+             in == 4'd3 ? 7'b1111001 :
+             in == 4'd4 ? 7'b0110011 :
+             in == 4'd5 ? 7'b1011011 :
+             in == 4'd6 ? 7'b1011111 :
+             in == 4'd7 ? 7'b1110000 :
+             in == 4'd8 ? 7'b1111111 :
+             in == 4'd9 ? 7'b1111011 :
+                          7'b0000000;
+
+endmodule
+
+
+// ============================================================
+// 11. TESTBENCH
+// File: testbench.v
+// ============================================================
+
+module testbench;
+
+reg a;
+reg b;
+reg sel;
+
+wire mux_y;
+wire mux_cond_y;
+
+reg d;
+wire demux_y0;
+wire demux_y1;
+wire demux_cond_y0;
+wire demux_cond_y1;
+
+reg d0;
+reg d1;
+reg d2;
+reg d3;
+
+wire enc_y1;
+wire enc_y0;
+wire [1:0] enc_cond_y;
+
+reg dec_a;
+reg dec_b;
+
+wire dec_y0;
+wire dec_y1;
+wire dec_y2;
+wire dec_y3;
+
+reg [1:0] dec_in;
+wire [3:0] dec_cond_y;
+
+reg [3:0] seg_in;
+wire [6:0] seg;
+wire [6:0] seg_cond;
+
+
+// MUX
+mux2to1 M1(
+    .a(a),
+    .b(b),
+    .sel(sel),
+    .y(mux_y)
+);
+
+mux2to1_cond M2(
+    .a(a),
+    .b(b),
+    .sel(sel),
+    .y(mux_cond_y)
+);
+
+
+// DEMUX
+demux1to2 D1(
+    .d(d),
+    .sel(sel),
+    .y0(demux_y0),
+    .y1(demux_y1)
+);
+
+demux1to2_cond D2(
+    .d(d),
+    .sel(sel),
+    .y0(demux_cond_y0),
+    .y1(demux_cond_y1)
+);
+
+
+// ENCODER
+encoder4to2 E1(
+    .d0(d0),
+    .d1(d1),
+    .d2(d2),
+    .d3(d3),
+    .y1(enc_y1),
+    .y0(enc_y0)
+);
+
+encoder4to2_cond E2(
+    .d0(d0),
+    .d1(d1),
+    .d2(d2),
+    .d3(d3),
+    .y(enc_cond_y)
+);
+
+
+// DECODER
+decoder2to4 DC1(
+    .a(dec_a),
+    .b(dec_b),
+    .y0(dec_y0),
+    .y1(dec_y1),
+    .y2(dec_y2),
+    .y3(dec_y3)
+);
+
+decoder2to4_cond DC2(
+    .in(dec_in),
+    .y(dec_cond_y)
+);
+
+
+// 7 SEGMENT
+seven_segment S1(
+    .in(seg_in),
+    .seg(seg)
+);
+
+seven_segment_cond S2(
+    .in(seg_in),
+    .seg(seg_cond)
+);
+
+
+// TEST
+initial begin
+
+    // MUX
+    a = 0;
+    b = 1;
+    sel = 0;
+    #10;
+
+    sel = 1;
+    #10;
+
+    a = 1;
+    b = 0;
+    sel = 0;
+    #10;
+
+    sel = 1;
+    #10;
+
+
+    // DEMUX
+    d = 1;
+    sel = 0;
+    #10;
+
+    sel = 1;
+    #10;
+
+
+    // ENCODER
+    d0 = 1;
+    d1 = 0;
+    d2 = 0;
+    d3 = 0;
+    #10;
+
+    d0 = 0;
+    d1 = 1;
+    d2 = 0;
+    d3 = 0;
+    #10;
+
+    d0 = 0;
+    d1 = 0;
+    d2 = 1;
+    d3 = 0;
+    #10;
+
+    d0 = 0;
+    d1 = 0;
+    d2 = 0;
+    d3 = 1;
+    #10;
+
+
+    // DECODER
+    dec_a = 0;
+    dec_b = 0;
+    dec_in = 2'b00;
+    #10;
+
+    dec_a = 0;
+    dec_b = 1;
+    dec_in = 2'b01;
+    #10;
+
+    dec_a = 1;
+    dec_b = 0;
+    dec_in = 2'b10;
+    #10;
+
+    dec_a = 1;
+    dec_b = 1;
+    dec_in = 2'b11;
+    #10;
+
+
+    // 7 SEGMENT
+    seg_in = 4'd0;
+    #10;
+
+    seg_in = 4'd1;
+    #10;
+
+    seg_in = 4'd2;
+    #10;
+
+    seg_in = 4'd3;
+    #10;
+
+    seg_in = 4'd4;
+    #10;
+
+    seg_in = 4'd5;
+    #10;
+
+    seg_in = 4'd6;
+    #10;
+
+    seg_in = 4'd7;
+    #10;
+
+    seg_in = 4'd8;
+    #10;
+
+    seg_in = 4'd9;
+    #10;
+
+    $finish;
+
+end
+
+endmodule
